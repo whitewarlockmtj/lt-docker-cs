@@ -8,7 +8,6 @@ migraciones instalando `dotnet-ef` localmente en el proyecto usando `.config`.
 - [Nix](https://nixos.org/download.html) installed
 - [Nix Flakes](https://nixos.wiki/wiki/Flakes) enabled
 - [Docker](https://www.docker.com/get-started) installed
-- [.NET SDK](https://dotnet.microsoft.com/download) installed
 
 ## Steps
 
