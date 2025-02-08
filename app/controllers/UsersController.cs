@@ -24,19 +24,28 @@ namespace app.controllers
         /// </summary>
         /// <returns>A list of users wrapped in a "data" object.</returns>
         [HttpGet]
-        public async Task<ActionResult<UserListResponse>> GetAll()
+        public async Task<ActionResult<UserListResponse>> GetAll(int page = 1, int pageSize = 10)
         {
             var users = await _userService.GetAllAsync();
-            var userResponses = users.Select(u => new UserResponse
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Email = u.Email
-            }).ToList();
+            var userResponses = users
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(u => new UserResponse
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email
+                }).ToList();
 
             var response = new UserListResponse
             {
-                Data = userResponses
+                Data = userResponses,
+                Meta = new Metadata
+                {
+                    Total = users.Count,
+                    Page = page,
+                    PageSize = pageSize
+                }
             };
 
             return Ok(response);
