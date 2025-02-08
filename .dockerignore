@@ -1,0 +1,16 @@
+data/
+**/bin/
+**/.config/
+**/Migrations/
+**/Debug/
+flake.nix
+flake.lock
+docker-compose.yml
+README.md
+.git/
+.idea/
+.vscode/
+DS_Store
+Dockerfile
+.gitignore
+lt-docker.sln

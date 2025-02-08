@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>app</name>
+    </assembly>
+    <members>
+        <member name="T:app.controllers.dtos.UserListResponse">
+            <summary>
+            Represents the response structure for a list of users with metadata.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserListResponse.Data">
+            <summary>
+            The list of users.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserListResponse.Meta">
+            <summary>
+            Metadata about the response.
+            </summary>
+        </member>
+        <member name="T:app.controllers.dtos.Metadata">
+            <summary>
+            Represents metadata for the response.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.Metadata.Total">
+            <summary>
+            The total number of users.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.Metadata.Page">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.Metadata.PageSize">
+            <summary>
+            The number of users per page.
+            </summary>
+        </member>
+        <member name="T:app.controllers.dtos.UserRequest">
+            <summary>
+            Represents the request data for creating or updating a user.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserRequest.Name">
+            <summary>
+            The name of the user.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserRequest.Email">
+            <summary>
+            The email of the user.
+            </summary>
+        </member>
+        <member name="T:app.controllers.dtos.UserResponse">
+            <summary>
+            Represents the response data for a user.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserResponse.Id">
+            <summary>
+            The ID of the user.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserResponse.Name">
+            <summary>
+            The name of the user.
+            </summary>
+        </member>
+        <member name="P:app.controllers.dtos.UserResponse.Email">
+            <summary>
+            The email of the user.
+            </summary>
+        </member>
+        <member name="T:app.controllers.UsersController">
+            <summary>
+            Controller for managing users.
+            </summary>
+        </member>
+        <member name="M:app.controllers.UsersController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Gets a list of all users.
+            </summary>
+            <returns>A list of users wrapped in a "data" object.</returns>
+        </member>
+        <member name="M:app.controllers.UsersController.GetById(System.Int32)">
+            <summary>
+            Gets a user by ID.
+            </summary>
+            <param name="id">The ID of the user.</param>
+            <returns>The user with the specified ID.</returns>
+        </member>
+        <member name="M:app.controllers.UsersController.Create(app.controllers.dtos.UserRequest)">
+            <summary>
+            Creates a new user.
+            </summary>
+            <param name="request">The user to create.</param>
+            <returns>The created user.</returns>
+        </member>
+        <member name="M:app.controllers.UsersController.Update(System.Int32,app.controllers.dtos.UserRequest)">
+            <summary>
+            Updates an existing user.
+            </summary>
+            <param name="id">The ID of the user to update.</param>
+            <param name="request">The updated user data.</param>
+            <returns>The updated user.</returns>
+        </member>
+        <member name="M:app.controllers.UsersController.Delete(System.Int32)">
+            <summary>
+            Deletes a user by ID.
+            </summary>
+            <param name="id">The ID of the user to delete.</param>
+            <returns>No content if the user was deleted successfully.</returns>
+        </member>
+        <member name="T:app.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:app.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:app.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:app.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
