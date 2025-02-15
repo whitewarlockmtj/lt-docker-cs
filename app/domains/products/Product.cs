@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace app.domains.users
+namespace app.domains.products
 {
-    [Index(nameof(Email), IsUnique = true)]
-    public class User
+    [Index(nameof(Sku), IsUnique = true)]
+    public class Product
     {
         public int Id { get; set; }
 
@@ -13,7 +13,10 @@ namespace app.domains.users
         public required string Name { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public required string Email { get; set; }
+        [StringLength(20)]
+        public required string Sku { get; set; }
+
+        [Required]
+        public required decimal Price { get; set; }
     }
 }

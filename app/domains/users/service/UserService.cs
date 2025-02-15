@@ -1,39 +1,34 @@
 using app.domains.users.repository;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace app.domains.users.service
 {
-    public class UserService : IUserService
+    public class UserService(IUserRepository userRepository) : IUserService
     {
-        private readonly IUserRepository _userRepository;
-
-        public UserService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
         public async Task<List<User>> GetAllAsync()
         {
-            return await _userRepository.GetAllAsync();
+            return await userRepository.GetAllAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _userRepository.GetByIdAsync(id);
+            return await userRepository.GetByIdAsync(id);
         }
 
         public async Task<User> CreateAsync(User user)
         {
-            return await _userRepository.CreateAsync(user);
+            return await userRepository.CreateAsync(user);
         }
 
         public async Task<User?> UpdateAsync(int id, User user)
         {
-            return await _userRepository.UpdateAsync(id, user);
+            return await userRepository.UpdateAsync(id, user);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            return await _userRepository.DeleteAsync(id);
+            return await userRepository.DeleteAsync(id);
         }
     }
 }

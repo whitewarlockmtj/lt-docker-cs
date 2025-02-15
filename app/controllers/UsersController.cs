@@ -1,7 +1,8 @@
-using app.domains.users;
-using app.controllers.dtos;
+using app.controllers.dtos.users;
 using app.domains.users.service;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace app.controllers
 {
@@ -10,15 +11,8 @@ namespace app.controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         /// <summary>
         /// Gets a list of all users.
         /// </summary>
@@ -26,7 +20,7 @@ namespace app.controllers
         [HttpGet]
         public async Task<ActionResult<UserListResponse>> GetAll(int page = 1, int pageSize = 10)
         {
-            var users = await _userService.GetAllAsync();
+            var users = await userService.GetAllAsync();
             var userResponses = users
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -59,7 +53,7 @@ namespace app.controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponse>> GetById(int id)
         {
-            var user = await _userService.GetByIdAsync(id);
+            var user = await userService.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -87,7 +81,7 @@ namespace app.controllers
                 Email = request.Email
             };
 
-            var createdUser = await _userService.CreateAsync(user);
+            var createdUser = await userService.CreateAsync(user);
 
             var userResponse = new UserResponse
             {
@@ -114,7 +108,7 @@ namespace app.controllers
                 Email = request.Email
             };
 
-            var updatedUser = await _userService.UpdateAsync(id, user);
+            var updatedUser = await userService.UpdateAsync(id, user);
             if (updatedUser == null)
                 return NotFound();
 
@@ -136,7 +130,7 @@ namespace app.controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _userService.DeleteAsync(id);
+            var result = await userService.DeleteAsync(id);
             if (!result)
                 return NotFound();
             return NoContent();

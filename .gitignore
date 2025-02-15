@@ -2,3 +2,5 @@ app/bin/
 data/
 Debug/
 **/publish/
+**/*.sln
+**/obj/
