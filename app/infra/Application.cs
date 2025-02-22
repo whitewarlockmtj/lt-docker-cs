@@ -1,15 +1,9 @@
+using System.Reflection;
 using app.domains.products.repository;
 using app.domains.products.service;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using app.domains.users.service;
 using app.domains.users.repository;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
+using app.domains.users.service;
+using Microsoft.OpenApi.Models;
 
 namespace app.infra
 {
@@ -28,12 +22,14 @@ namespace app.infra
         private Application(string[] args)
         {
             // Basic WebApplicationBuilder (minimal defaults)
-            _builder = WebApplication.CreateBuilder(new WebApplicationOptions
-            {
-                // We'll set the EnvironmentName later, after we read configs
-                ContentRootPath = Directory.GetCurrentDirectory(),
-                Args = args
-            });
+            _builder = WebApplication.CreateBuilder(
+                new WebApplicationOptions
+                {
+                    // We'll set the EnvironmentName later, after we read configs
+                    ContentRootPath = Directory.GetCurrentDirectory(),
+                    Args = args,
+                }
+            );
         }
 
         /// <summary>
@@ -51,8 +47,6 @@ namespace app.infra
 
             _builder.Configuration.Sources.Clear();
             _builder.Configuration.AddInMemoryCollection(Configuration.GetInstance.ToDictionary()!);
-
-            SecretsManager.GetInstance.Initialize();
         }
 
         /// <summary>
@@ -82,7 +76,8 @@ namespace app.infra
         /// </summary>
         private void ConfigureSwagger()
         {
-            if (_builder.Configuration["STAGE"] == "prod") return;
+            if (_builder.Configuration["STAGE"] == "prod")
+                return;
 
             _builder.Services.AddSwaggerGen(c =>
             {

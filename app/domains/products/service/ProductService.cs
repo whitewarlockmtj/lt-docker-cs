@@ -1,15 +1,12 @@
 using app.domains.products.filters;
 using app.domains.products.repository;
 using app.lib.pagination;
-using Microsoft.VisualBasic;
 using shortid;
 using shortid.Configuration;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace app.domains.products.service
 {
-    public class ProductService(IProductRepository repo): IProductService
+    public class ProductService(IProductRepository repo) : IProductService
     {
         public Task<List<Product>> GetAllAsync()
         {

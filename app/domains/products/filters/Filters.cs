@@ -1,12 +1,11 @@
 using app.lib.pagination;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 // ReSharper disable InconsistentNaming
 
 namespace app.domains.products.filters
 {
-    public class Filters: IFilters<Product>
+    public class Filters : IFilters<Product>
     {
         private const int _maxPageSize = 100;
         private int _pageNumber { get; set; } = 1;
@@ -20,20 +19,25 @@ namespace app.domains.products.filters
 
         public IQueryable<Product> Apply(IQueryable<Product> query)
         {
-            if (Id.HasValue) query = query.Where(p => p.Id == Id.Value);
+            if (Id.HasValue)
+                query = query.Where(p => p.Id == Id.Value);
 
             if (!string.IsNullOrEmpty(SearchTerm))
             {
                 query = query.Where(p =>
-                    EF.Functions.ILike(p.Name, $"%{SearchTerm}%") ||
-                    EF.Functions.ILike(p.Sku, $"%{SearchTerm}%"));
+                    EF.Functions.ILike(p.Name, $"%{SearchTerm}%")
+                    || EF.Functions.ILike(p.Sku, $"%{SearchTerm}%")
+                );
             }
 
-            if (!string.IsNullOrEmpty(Sku)) query = query.Where(p => p.Sku == Sku);
+            if (!string.IsNullOrEmpty(Sku))
+                query = query.Where(p => p.Sku == Sku);
 
-            if (MinPrice.HasValue) query = query.Where(p => p.Price >= MinPrice.Value);
+            if (MinPrice.HasValue)
+                query = query.Where(p => p.Price >= MinPrice.Value);
 
-            if (MaxPrice.HasValue) query = query.Where(p => p.Price <= MaxPrice.Value);
+            if (MaxPrice.HasValue)
+                query = query.Where(p => p.Price <= MaxPrice.Value);
 
             return query.OrderBy(p => p.Id);
         }

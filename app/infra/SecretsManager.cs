@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-
 namespace app.infra
 {
     /// <summary>
@@ -27,12 +21,28 @@ namespace app.infra
     /// </summary>
     public class SecretsManager
     {
-        private readonly static Lazy<SecretsManager> Instance = new Lazy<SecretsManager>(() => new SecretsManager());
+        private static readonly Lazy<Dictionary<string, Lazy<SecretsManager>>> Instance = new Lazy<
+            Dictionary<string, Lazy<SecretsManager>>
+        >(new Dictionary<string, Lazy<SecretsManager>>());
+        
         private Dictionary<string, string>? _secrets;
+        private readonly string _secretName;
 
-        private SecretsManager() { }
+        private SecretsManager(string secretName)
+        {
+            _secretName = secretName;
+        }
 
-        public static SecretsManager GetInstance => Instance.Value;
+        public static SecretsManager GetInstance(string secret)
+        {
+            if (Instance.Value.TryGetValue(secret, out var get))
+                return get.Value;
+            
+            get = new Lazy<SecretsManager>(() => new SecretsManager(secret));
+            Instance.Value[secret] = get;
+
+            return get.Value;
+        }
 
         /// <summary>
         /// Initialize the secrets manager by fetching secrets from the Phase API if the environment stage is not local.
@@ -49,7 +59,8 @@ namespace app.infra
                 _ => "local"
             };
 
-            if (env == "local") return;
+            if (env == "local")
+                return;
 
             CallPhaseApi(env);
         }
@@ -62,16 +73,21 @@ namespace app.infra
         {
             var config = Configuration.GetInstance;
 
-            var appId = config.Get("PHASE_APP_ID") ?? "";
+            var appId = _secretName;
             var apiKey = config.Get("PHASE_API_KEY") ?? "";
 
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
-            var response = httpClient.GetAsync($"https://api.phase.dev/v1/secrets/?app_id={appId}&env={env}").Result;
+            var response = httpClient
+                .GetAsync($"https://api.phase.dev/v1/secrets/?app_id={appId}&env={env}")
+                .Result;
             var data = response.Content.ReadFromJsonAsync<List<PhaseSecret>>().Result;
 
-            _secrets = data == null ? new Dictionary<string, string>() : data.ToDictionary(x => x.Key, x => x.Value);
+            _secrets =
+                data == null
+                    ? new Dictionary<string, string>()
+                    : data.ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>
