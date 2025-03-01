@@ -1,3 +1,8 @@
+## v0.1.4 (2025-03-01)
+
+
+- chore: change buidl to an script (#10)
+
 ## v0.1.3 (2025-03-01)
 
 
