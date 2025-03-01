@@ -1,3 +1,9 @@
+## v0.1.1 (2025-03-01)
+
+
+- fix: typo on ci (#7)
+- chore: add push to ECR (#6)
+
 ## v0.1.0 (2025-03-01)
 
 
