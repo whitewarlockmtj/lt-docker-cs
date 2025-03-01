@@ -82,6 +82,8 @@ namespace app.infra
         {
             _builder.Services.AddControllers();
             _builder.Services.AddEndpointsApiExplorer();
+
+            _builder.Services.AddHealthChecks().AddCheck<CustomHealthCheck>("custom_health_check");
         }
 
         /// <summary>
@@ -139,6 +141,8 @@ namespace app.infra
 
             app.UseAuthorization();
             app.MapControllers();
+
+            app.MapHealthChecks("/.health");
 
             app.Run();
         }
