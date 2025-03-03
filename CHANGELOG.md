@@ -1,3 +1,10 @@
+## v0.1.5 (2025-03-03)
+
+
+- chore: adjust missing docs and deployment params (#11)
+- * docs: add docs to reproduce deployment environment
+- * chore: save
+
 ## v0.1.4 (2025-03-01)
 
 
