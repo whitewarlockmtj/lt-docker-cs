@@ -1,3 +1,10 @@
+## v0.1.9 (2025-03-08)
+
+
+- chore: build (#15)
+- * fix: prod secrets config
+- * chore: build
+
 ## v0.1.8 (2025-03-07)
 
 
