@@ -1,3 +1,10 @@
+## v0.1.11 (2025-03-08)
+
+
+- chore: automate terraform apply (#17)
+- * chore: automate terraform apply
+- * chore: save
+
 ## v0.1.10 (2025-03-08)
 
 
