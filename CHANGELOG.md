@@ -1,3 +1,11 @@
+## v0.1.10 (2025-03-08)
+
+
+- chore: fix docker platform (#16)
+- * fix: prod secrets config
+- * chore: build
+- * chore: add aut approve to destroy
+
 ## v0.1.9 (2025-03-08)
 
 
