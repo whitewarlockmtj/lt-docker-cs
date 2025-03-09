@@ -1,0 +1,149 @@
+name: Release service
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: 
+  contents: write
+  
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  bump_version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-24.04
+    name: "Bump version"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.ACCESS_TOKEN }}"
+          ref: "main"
+
+      - id: cz
+        name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@0.24.0
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          branch: "main"
+          git_name: ${{ vars.GIT_NAME }}
+          git_email: ${{ vars.GIT_EMAIL }}
+          changelog_increment_filename: body.md
+
+      - name: Print Version
+        run: echo "Bumped to version v${{ env.REVISION }}"
+
+      - name: Trim body to 125000 characters
+        run: |
+          if [ $(wc -c < body.md) -gt 125000 ]; then
+            head -c 125000 body.md > body.md
+          fi
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: "body.md"
+          tag_name: v${{ env.REVISION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          make_latest: "true"
+          
+  build_docker:
+    runs-on: ubuntu-24.04
+    name: "Build Docker"
+    needs: bump_version
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.ACCESS_TOKEN }}"
+          ref: "main"
+          
+      # set aws credentials
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # build and upload to AWS ECR
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+          
+      # get latest tag on repo
+      - name: Get latest tag
+        id: get_tag
+        run: echo "name=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+      
+      - name: Build and push Docker image
+        run: |
+          bash build.sh \
+            "${{ vars.POSTGRES_SEC_ID }}" \
+            "${{ secrets.PHASE_API_KEY }}" \
+            "${{ secrets.AWS_ACCOUNT_ID }}" \
+            "${{ secrets.AWS_REGION }}" \
+            "${{ steps.get_tag.outputs.name }}"
+          
+  update_service_version:
+    name: "Update service version"
+    runs-on: ubuntu-24.04
+    needs: build_docker
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.ACCESS_TOKEN }}"
+          ref: "main"
+
+      - name: Get latest tag
+        id: get_tag
+        run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT  
+          
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+        
+      - name: Terraform workspace select
+        working-directory: terraform
+        run: terraform workspace select prod || terraform workspace new prod
+        
+      - name: Terraform Validate
+        working-directory: terraform
+        continue-on-error: false
+        run: terraform validate -no-color
+        
+      - name: Terraform Plan
+        id: tf_plan
+        working-directory: terraform
+        run: terraform plan -no-color
+        continue-on-error: false
+        env:
+          IMAGE_TAG: ${{ steps.get_tag.outputs.version }}
+          
+      - name: Show Terraform Plan
+        run: echo "${{ steps.tf_plan.outputs.stdout }}"
+        
+      - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply -auto-approve -no-color
+        env:
+          IMAGE_TAG: ${{ steps.get_tag.outputs.version }}

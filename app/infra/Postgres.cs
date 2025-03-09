@@ -16,9 +16,11 @@ namespace app.infra
 
         public PostgresDbContext(DbContextOptions<PostgresDbContext> options)
         {
-            _secretName = Configuration.GetInstance.Get("POSTGRES_SECRET_NAME") ?? throw new SecretsException(
-                "POSTGRES_SECRET_NAME environment variable is required"
-            );
+            _secretName =
+                Configuration.GetInstance.Get("POSTGRES_SECRET_NAME")
+                ?? throw new SecretsException(
+                    "POSTGRES_SECRET_NAME environment variable is required"
+                );
 
             SecretsManager.GetInstance(_secretName).Initialize();
         }
@@ -53,10 +55,10 @@ namespace app.infra
                 var port = secrets.MustGet("POSTGRES_PORT");
 
                 connectionString =
-                    $"Host={host};Database={database};Username={user};Password={password};Port={port}";
+                    $"Host={host};Database={database};Username={user};Password={password}";
+                
+                if (!string.IsNullOrEmpty(port)) connectionString += $";Port={port}";
             }
-
-            Console.WriteLine($"Using connection string: {connectionString}");
 
             optionsBuilder.UseNpgsql(connectionString);
         }

@@ -1,5 +1,6 @@
 # Stage 1: Build the application
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+
 WORKDIR /src
 
 # Copy the project files
@@ -18,6 +19,10 @@ WORKDIR /app
 
 ARG stage="dev"
 ARG port="5000"
+ARG logLevel="INFO"
+ARG logstashConfigs=""
+ARG phaseApiKey=""
+ARG postgresSecretName=""
 
 # Copy the published application from the build stage
 COPY --from=build /src/publish .
@@ -31,13 +36,17 @@ COPY --from=build "/src/config/${stage}.yml" "./config/${stage}.yml"
 ENV SERVICE_NAME="lt-docker-netcore"
 ENV STAGE="${stage}"
 ENV PORT="${port}"
+ENV LOG_LEVEL="${logLevel}"
 
 # Secrets manager credentials
-ENV PHASE_API_KEY=""
-ENV POSTGRES_SECRET_NAME=""
+ENV PHASE_API_KEY="${phaseApiKey}"
+ENV POSTGRES_SECRET_NAME="${postgresSecretName}"
+ENV LOGSTASH_CONFIGS="${logstashConfigs}"
 
 # Expose the port your application will run on
 EXPOSE ${port}
 
 # Set the entry point for the application
-ENTRYPOINT ["dotnet", "app.dll"]
+ENTRYPOINT ["dotnet"]
+
+CMD ["app.dll"]
