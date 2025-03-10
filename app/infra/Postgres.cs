@@ -52,7 +52,7 @@ namespace app.infra
                 var password = secrets.MustGet("POSTGRES_PASSWORD");
                 var host = secrets.MustGet("POSTGRES_HOST");
                 var database = secrets.MustGet("POSTGRES_DB");
-                var port = secrets.MustGet("POSTGRES_PORT");
+                var port = secrets.Get("POSTGRES_PORT");
 
                 connectionString =
                     $"Host={host};Database={database};Username={user};Password={password}";
