@@ -1,0 +1,45 @@
+module pkl.main
+
+import "classes.pkl" as classes
+
+local phaseApiKey = read?("env:PHASE_API_KEY") ?? ""
+local postgresSecId = read?("env:POSTGRES_SEC_ID") ?? ""
+local logstashSecId = read?("env:LOGSTASH_SEC_ID") ?? ""
+local stage = read?("env:STAGE") ?? "local"
+
+local envs: List<classes.ConfEnv> = List(
+  new classes.ConfEnv {
+    name = "SERVICE_NAME"
+    dev = "lt-docker-cs"
+    prod = "lt-docker-cs"
+    default = "lt-docker-cs"
+  },
+  new classes.ConfEnv {
+    name = "PHASE_API_KEY"
+    dev = phaseApiKey
+    prod = phaseApiKey
+    default = phaseApiKey
+  },
+  new classes.ConfEnv {
+    name = "POSTGRES_SEC_ID"
+    dev = postgresSecId
+    prod = postgresSecId
+    default = postgresSecId
+  },
+  new classes.ConfEnv {
+    name = "LOGSTASH_SEC_ID"
+    dev = logstashSecId
+    prod = logstashSecId
+    default = logstashSecId
+  },
+  new classes.ConfEnv {
+    name = "NAME"
+    dev = "dev-name"
+    prod = "prod-name"
+    default = "local-name"
+  }
+)
+
+output {
+  value = classes.getEnvs(stage, envs)
+}

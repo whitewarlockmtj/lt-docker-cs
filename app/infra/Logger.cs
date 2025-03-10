@@ -16,7 +16,7 @@ namespace app.infra
         public void Initialize()
         {
             var level = Environment.GetEnvironmentVariable("LOG_LEVEL") ?? "INFO";
-            var secretName = Environment.GetEnvironmentVariable("LOGSTASH_CONFIGS") ?? "";
+            var secretName = Environment.GetEnvironmentVariable("LOGSTASH_SEC_ID") ?? "";
             var stage = Configuration.GetInstance.Get("STAGE");
 
             var minLevel = level switch
