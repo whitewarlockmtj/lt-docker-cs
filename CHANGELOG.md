@@ -1,3 +1,10 @@
+## v0.2.1 (2025-03-10)
+
+
+- Merge pull request #20 from danteay/fix/tools-restore
+- fix: add dotnet tools restore
+- fix: add dotnet tools restore
+
 ## v0.2.0 (2025-03-10)
 
 
