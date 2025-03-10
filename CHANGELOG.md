@@ -1,3 +1,10 @@
+## v0.2.3 (2025-03-10)
+
+
+- Merge pull request #22 from danteay/fix/secrets-vars
+- fix: missing secrets to current vars
+- fix: missing secrets to current vars
+
 ## v0.2.2 (2025-03-10)
 
 
