@@ -1,3 +1,12 @@
+## v0.2.0 (2025-03-10)
+
+
+- Merge pull request #19 from danteay/feat/complete-pipeline
+- feat: complete full pipeline
+- chore: save
+- feat: complete full pipeline
+- fix: add select terraform workspace (#18)
+
 ## v0.1.11 (2025-03-08)
 
 
