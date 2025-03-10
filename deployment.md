@@ -7,6 +7,7 @@
 - [AWS Account](https://aws.amazon.com/)
 - [Phase.dev](https://phase.dev) account to mange secrets
 - [Docker](https://www.docker.com/get-started) installed
+- [PKL](https://pkl-lang.org/main/current/pkl-cli/index.html#installation) to build configuration files
 - [Commitizen](https://commitizen-tools.github.io/commitizen/getting_started/)
 
 ### Recomendaciones

@@ -14,11 +14,13 @@
       {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
+            (import ./nix/pkl.nix { inherit pkgs; })
+            
             dotnetCorePackages.sdk_9_0-bin
-
+            
             docker
             docker-compose
-
+  
             openssl
             postgresql # to obtain libpq-dev
             
