@@ -116,7 +116,7 @@ jobs:
           
       - name: Restore dependencies
         working-directory: app
-        run: dotnet restore
+        run: dotnet restore && dotnet tool restore
         
       - name: Run migrations
         working-directory: app
