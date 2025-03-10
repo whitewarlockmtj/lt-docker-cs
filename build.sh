@@ -6,8 +6,6 @@ AWS_ACCOUNT_ID=$3
 AWS_REGION=$4
 VERSION=$5
 
-pkl eval -f yaml app/config/pkl/main.pkl > app/config/pkl/prod.yml
-
 docker build \
     --build-arg stage=prod \
     --build-arg port=5001 \
