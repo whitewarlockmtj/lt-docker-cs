@@ -1,3 +1,10 @@
+## v0.2.2 (2025-03-10)
+
+
+- Merge pull request #21 from danteay/fix/missing-config-file
+- fix: missing build config file for migrations
+- fix: missing build config file for migrations
+
 ## v0.2.1 (2025-03-10)
 
 
