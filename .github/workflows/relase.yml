@@ -10,8 +10,8 @@ permissions:
   
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  POSTGRES_SEC_ID: ${{ secrets.POSTGRES_SEC_ID }}
-  LOGSTASH_SEC_ID: ${{ secrets.LOGSTASH_SEC_ID }}
+  POSTGRES_SEC_ID: ${{ vars.POSTGRES_SEC_ID }}
+  LOGSTASH_SEC_ID: ${{ vars.LOGSTASH_SEC_ID }}
   PHASE_API_KEY: ${{ secrets.PHASE_API_KEY }}
   STAGE: 'prod'
 
