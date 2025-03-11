@@ -1,3 +1,11 @@
+## v0.3.0 (2025-03-11)
+
+
+- Merge pull request #24 from danteay/feat/finish-all-features
+- feat: finish all features
+- chore: set to 0 for avoid running service
+- feat: add all missing features and normalizations
+
 ## v0.2.4 (2025-03-11)
 
 
