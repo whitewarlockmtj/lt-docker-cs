@@ -33,7 +33,6 @@ COPY --from=build "/src/config/${stage}.yml" "./config/${stage}.yml"
 ENV SERVICE_NAME="lt-docker-netcore"
 ENV STAGE="${stage}"
 ENV PORT="${port}"
-ENV LOG_LEVEL="${logLevel}"
 
 # Expose the port your application will run on
 EXPOSE ${port}

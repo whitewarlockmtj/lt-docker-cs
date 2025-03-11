@@ -58,7 +58,6 @@ namespace app.infra
         {
             // Now that config is loaded, read the port from config
             var appPort = _builder.Configuration["PORT"];
-            Console.WriteLine($"Server will run on port {appPort}");
 
             // UseUrls after config is loaded
             _builder.WebHost.UseUrls($"http://0.0.0.0:{appPort}");

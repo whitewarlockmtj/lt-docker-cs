@@ -22,7 +22,7 @@
             docker-compose
   
             openssl
-            postgresql # to obtain libpq-dev
+            postgresql
             
             gnumake
             terraform
