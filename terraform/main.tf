@@ -49,7 +49,7 @@ module "lt-docker-cs-service" {
   cluster_id     = module.ecs.cluster_id
   aws_region     = local.aws_region
   image_tag      = local.image_tag
-  desired_count  = 1
+  desired_count  = 0 # Number of service replicas to run
 
   subnet_ids = [
     module.vpc.default_subnet_a_id,
