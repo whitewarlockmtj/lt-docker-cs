@@ -4,7 +4,7 @@ import "classes.pkl" as classes
 
 local phaseApiKey = read?("env:PHASE_API_KEY") ?? ""
 local postgresSecId = read?("env:POSTGRES_SEC_ID") ?? ""
-local logstashSecId = read?("env:LOGSTASH_SEC_ID") ?? ""
+local logstashSecId = read?("env:ELASTIC_SEC_ID") ?? ""
 local stage = read?("env:STAGE") ?? "local"
 
 local envs: List<classes.ConfEnv> = List(
@@ -27,16 +27,16 @@ local envs: List<classes.ConfEnv> = List(
     default = postgresSecId
   },
   new classes.ConfEnv {
-    name = "LOGSTASH_SEC_ID"
+    name = "ELASTIC_SEC_ID"
     dev = logstashSecId
     prod = logstashSecId
     default = logstashSecId
   },
   new classes.ConfEnv {
-    name = "NAME"
-    dev = "dev-name"
-    prod = "prod-name"
-    default = "local-name"
+    name = "LOG_LEVEL"
+    dev = "DEBUG"
+    prod = "INFO"
+    default = "DEBUG"
   }
 )
 

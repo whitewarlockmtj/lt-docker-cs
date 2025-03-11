@@ -48,18 +48,14 @@ namespace app.infra
         /// </summary>
         public void Initialize()
         {
+            var confFile = $"config/{DefaultEnvs.Stage}.yml";
+            
             _config = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddInMemoryCollection(DefaultEnvs.ToDictionary()!)
-                .AddYamlFile(
-                    $"config/{DefaultEnvs.Stage}.yml",
-                    optional: false,
-                    reloadOnChange: false
-                )
+                .AddYamlFile(confFile,optional: false,reloadOnChange: false)
                 .AddEnvironmentVariables()
                 .Build();
-
-            Console.WriteLine($"NAME env: {Environment.GetEnvironmentVariable("NAME")}");
         }
     }
 }

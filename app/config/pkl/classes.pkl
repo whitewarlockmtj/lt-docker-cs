@@ -28,11 +28,13 @@ class ConfEnv{
     else if (value is Int) value
     else "\(value)"
 
+  /// validate checks if the configuration is valid
   function validate(): Boolean =
     if (!isSameType(this.prod, this.dev)) throw("prod and dev fields must be of the same type")
     else if (!isSameType(this.prod, this.default)) throw("prod and default fields must be of the same type")
     else true
 
+  /// isSameType checks if two ConfType are of the same base type
   function isSameType(a: ConfType, b: ConfType): Boolean =
     if (a == null || b == null) true
     else if (a is List<String> && b is List<String>) true
@@ -42,6 +44,7 @@ class ConfEnv{
     else false    
 }
 
+/// getEnvs returns a Mapping with the configurations for the given stage
 function getEnvs(stage: String, configs: List<ConfEnv>): Mapping = new {
   for (config in configs) {
     ["\(config.name)"] = config.value(stage)

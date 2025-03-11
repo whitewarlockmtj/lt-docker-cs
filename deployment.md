@@ -31,7 +31,7 @@ y seguir los siguientes pasos:
 
 - Ir a la consola de AWS y entrar a `IAM`
 - Ir a `Policies` y crear una nueva con el boton `Create policy`
-- Seleccionar `JSON` y copiar el contenido del archivo `cicd_user_policy.json` de la raiz del proyecto
+- Seleccionar `JSON` y copiar el contenido del archivo [cicd_user_policy.json](cicd_user_policy.json) de la raiz del proyecto
 - Como Nombre de la politica poner `CICDDeployment`
 - Crear la politica con el boton `Create policy`
 - Ir a `Users` y crear un nuevo usuario con el boton `Create user`
