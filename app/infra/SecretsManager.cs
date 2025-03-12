@@ -35,6 +35,9 @@ namespace app.infra
 
         public static SecretsManager GetInstance(string secret)
         {
+            if (string.IsNullOrWhiteSpace(secret))
+                throw new SecretsException("Secret name cannot be empty");
+            
             if (Instance.Value.TryGetValue(secret, out var get))
                 return get.Value;
 
@@ -79,9 +82,15 @@ namespace app.infra
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
-            var response = httpClient
-                .GetAsync($"https://api.phase.dev/v1/secrets/?app_id={appId}&env={env}")
-                .Result;
+            var uri = $"https://api.phase.dev/v1/secrets/?app_id={appId}&env={env}";
+            var response = httpClient.GetAsync(uri).Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"[ERROR] Response content: {response.Content.ReadAsStringAsync().Result}");
+                throw new SecretsException("Failed to fetch secrets from Phase API");
+            }
+
             var data = response.Content.ReadFromJsonAsync<List<PhaseSecret>>().Result;
 
             _secrets =

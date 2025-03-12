@@ -15,8 +15,8 @@ namespace app.infra
 
         public void Initialize()
         {
-            var level = Environment.GetEnvironmentVariable("LOG_LEVEL") ?? "INFO";
-            var secretName = Environment.GetEnvironmentVariable("LOGSTASH_CONFIGS") ?? "";
+            var level = Configuration.GetInstance.Get("LOG_LEVEL") ?? "INFO";
+            var secretName = Configuration.GetInstance.Get("ELASTIC_SEC_ID") ?? "";
             var stage = Configuration.GetInstance.Get("STAGE");
 
             var minLevel = level switch
@@ -48,6 +48,8 @@ namespace app.infra
                 var elasticHost = secrets.MustGet("ELASTIC_HOST");
                 var elasticUser = secrets.MustGet("ELASTIC_USER");
                 var elasticPassword = secrets.MustGet("ELASTIC_PASSWORD");
+                
+                Console.WriteLine($"Connecting logs to {elasticHost} with user {elasticUser} and password {elasticPassword}");
 
                 newLogger.WriteTo.Elasticsearch(
                     new ElasticsearchSinkOptions(new Uri(elasticHost))

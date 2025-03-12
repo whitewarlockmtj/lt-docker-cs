@@ -1,0 +1,52 @@
+module baseconfig.classes
+
+typealias ConfType = (String|Boolean|Int|List<String>|Null)
+
+/// ConfEnv is a class that represents the configuration for a dev and prod environments
+/// It has a name that should be unique and formated in PascalCase and a dev and prod fields
+/// that can be a String, Boolean, Int or a List of Strings. The listSeparator field is used to
+/// join the List of Strings into a single String on the evaluation of the value function.
+class ConfEnv{
+  name: String(!isEmpty)
+  dev: ConfType = null 
+  prod: ConfType = null
+  default: ConfType = null
+  listSeparator: String = ","
+
+  /// value returns the value of the configuration for the given stage
+  function value(stage: String): (String|Boolean|Int) =
+    if (!this.validate()) throw("config envs has an invalid value") 
+    else (
+      if (stage == "prod") this.normalize(this.prod) else if (stage == "dev") this.normalize(this.dev) else this.normalize(this.default)
+    )
+
+  /// normalize returns the value of the configuration normalized into a String, Boolean or Int
+  function normalize(value: ConfType): (String|Boolean|Int) =
+    if (value is Null) ""
+    else if (value is List<String>) value.join(this.listSeparator)
+    else if (value is Boolean) value
+    else if (value is Int) value
+    else "\(value)"
+
+  /// validate checks if the configuration is valid
+  function validate(): Boolean =
+    if (!isSameType(this.prod, this.dev)) throw("prod and dev fields must be of the same type")
+    else if (!isSameType(this.prod, this.default)) throw("prod and default fields must be of the same type")
+    else true
+
+  /// isSameType checks if two ConfType are of the same base type
+  function isSameType(a: ConfType, b: ConfType): Boolean =
+    if (a == null || b == null) true
+    else if (a is List<String> && b is List<String>) true
+    else if (a is Boolean && b is Boolean) true
+    else if (a is Int && b is Int) true
+    else if (a is String && b is String) true
+    else false    
+}
+
+/// getEnvs returns a Mapping with the configurations for the given stage
+function getEnvs(stage: String, configs: List<ConfEnv>): Mapping = new {
+  for (config in configs) {
+    ["\(config.name)"] = config.value(stage)
+  }
+}

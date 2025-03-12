@@ -4,6 +4,7 @@ using app.domains.products;
 using app.domains.products.filters;
 using app.domains.products.repository;
 using app.domains.products.service;
+using app.infra;
 using app.lib.pagination;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -39,6 +40,7 @@ namespace app.controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductItem>> GetById(int id)
         {
+            Log.Logger.Information("Phase api key {key}", Configuration.GetInstance.Get("PHASE_API_KEY"));
             try
             {
                 var product = await srvProducts.GetByIdAsync(id);

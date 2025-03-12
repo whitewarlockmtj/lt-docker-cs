@@ -1,3 +1,48 @@
+## v0.3.0 (2025-03-11)
+
+
+- Merge pull request #24 from danteay/feat/finish-all-features
+- feat: finish all features
+- chore: set to 0 for avoid running service
+- feat: add all missing features and normalizations
+
+## v0.2.4 (2025-03-11)
+
+
+- Merge pull request #23 from danteay/fix/secrets-vars
+- fix: postgres port optional
+- fix: postgres port optional
+
+## v0.2.3 (2025-03-10)
+
+
+- Merge pull request #22 from danteay/fix/secrets-vars
+- fix: missing secrets to current vars
+- fix: missing secrets to current vars
+
+## v0.2.2 (2025-03-10)
+
+
+- Merge pull request #21 from danteay/fix/missing-config-file
+- fix: missing build config file for migrations
+- fix: missing build config file for migrations
+
+## v0.2.1 (2025-03-10)
+
+
+- Merge pull request #20 from danteay/fix/tools-restore
+- fix: add dotnet tools restore
+- fix: add dotnet tools restore
+
+## v0.2.0 (2025-03-10)
+
+
+- Merge pull request #19 from danteay/feat/complete-pipeline
+- feat: complete full pipeline
+- chore: save
+- feat: complete full pipeline
+- fix: add select terraform workspace (#18)
+
 ## v0.1.11 (2025-03-08)
 
 

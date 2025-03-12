@@ -1,18 +1,62 @@
 # Master en arquitectura digital con Docker
 
-Esta guía te ayudará a inicializar el proyecto .NET Core usando Nix, configurar un contenedor Docker para la base de datos y crear
-migraciones instalando `dotnet-ef` localmente en el proyecto usando `.config`.
+Esta guía te ayudará a inicializar el proyecto .NET Core usando Nix, configurar un contenedor Docker para la base de 
+datos y crear migraciones instalando `dotnet-ef` localmente en el proyecto usando `.config`.
 
 ## Prerequisites
 
-- [Nix](https://nixos.org/download.html) installed
-- [Nix Flakes](https://nixos.wiki/wiki/Flakes) enabled
-- [Docker](https://www.docker.com/get-started) installed
-- [Phase.dev](https://phase.dev) account to mange secrets
+- [Nix](https://nixos.org/download.html) Instalado
+- [Nix Flakes](https://nixos.wiki/wiki/Flakes) habilitado
+- [Docker](https://www.docker.com/get-started) Instalado
+- [Phase.dev](https://phase.dev) cuenta para manejar secretos
+- [Cuenta de AWS](https://aws.amazon.com/) para desplegar el proyecto
 
 ## Steps 
 
-### 1. Inicializar el proyecto .NET Core usando Nix
+### Configuracion de Secrets
+
+Para ejecutar el proyecto tanto en modo desarrollo (dentro de docker) como en produccion es necesario configurar 2
+secretos dentro de Phase.dev. Para configurar los secretos sigue los siguientes pasos:
+
+- Ir a la consola de Phase.dev y entrar a la seccion `Apps`
+- Crear 2 applicaciones con los siguientes nombres y valores para el ambiente de Development:
+  - postgres:
+    - `POSTGRES_USER`: `root`
+    - `POSTGRES_PASSWORD`: `root`
+    - `POSTGRES_HOST`: `postgres`
+    - `POSTGRES_PORT`: `5432`
+    - `POSTGRES_DB`: `postgres`
+  - elastic:
+    - `ELASTIC_HOST`: `http://elasticsearch:9200`
+    - `ELASTIC_USER`: `elastic`
+    - `ELASTIC_PASSWORD`: `elastic`
+- Guarda los IDs de las aplicaciones creadas para usarlos posteriormente en el despliegue del proyecto y la ejecucion 
+  del ambiente de desarrollo
+- Entra a cada una de las aplicaciones y en la seccion `Settings` habilita la opcion `Server-side encryption (SSE)`
+  para permitir su consumo mediante API
+- En la seccion `Access Control > Service Accounts` crea un nuevo Service Account tanto para el ambiente de desarrollo
+  como para el de produccion y asigna los permisos necesarios para consumir los secretos de las aplicaciones creadas.
+  **El ambiente de produccion no requerira acceso al secret de elastic dado que solo es necesario en desarrollo**
+- Entra a cada service account y crea un `Access Token` para cada uno el cual servira para configurar la variable 
+  `PHASE_API_KEY` tanto en el los secrets del pipeline de Github Actions como en el ambiente de desarrollo
+
+### Ejecucion del ambiente de desarrollo
+
+#### Configurar las variables de entorno
+
+Para que el proyecto funcione correctamente es necesario configurar variables de entorno relacionadas con los secretos
+
+Para esto crea un archivo envs.sh en la raiz del proyecto con el siguiente contenido:
+
+```sh
+export PHASE_API_KEY="<your-phase-dev-api-key-for-development>"
+export POSTGRES_SEC_ID="<postgres-app-id>"
+export ELASTIC_SEC_ID="<elastic-app-id>"
+```
+
+Este archivo sera cargado automaticamente cuando se ejecute el comando `make run_dev`
+
+#### Inicializar el proyecto .NET Core usando Nix
 
 Todas las dependencias del proyecto se gestionarán con Nix. Para inicializar el proyecto .NET Core, ejecuta el siguiente comando:
 
@@ -20,7 +64,7 @@ Todas las dependencias del proyecto se gestionarán con Nix. Para inicializar el
 nix develop --impure
 ```
 
-### 2. Configurar un contenedor Docker para la base de datos
+#### Configurar un contenedor Docker para la base de datos
 
 Este projecto usa postgres como base de datos. Para configurar un contenedor Docker para la base de datos, ejecuta el siguiente comando:
 
@@ -28,7 +72,7 @@ Este projecto usa postgres como base de datos. Para configurar un contenedor Doc
 docker-compose up postgres -d
 ```
 
-### 3. Instalar `dotnet-ef` localmente
+#### Instalar `dotnet-ef` localmente
 
 Para instalar las tools localmente en el proyecto, ejecuta el siguiente comando:
 
@@ -36,7 +80,7 @@ Para instalar las tools localmente en el proyecto, ejecuta el siguiente comando:
 dotnet tool restore
 ```
 
-### 4. Aplicar migraciones
+#### Aplicar migraciones
 
 Para aplicar las migraciones, ejecuta el siguiente comando:
 
@@ -44,12 +88,12 @@ Para aplicar las migraciones, ejecuta el siguiente comando:
 dotnet dotnet-ef database update
 ```
 
-### 5. Ejecutar el proyecto
+#### Ejecutar el proyecto
 
 Para ejecutar el pryecto localmente fuera de docker, ejecuta el siguiente comando:
 
 ```sh
-dotnet run
+make run_dev
 ```
 
 Podras ver el proyecto corriendo en `http://localhost:5001`, y la documentación de la API en `http://localhost:5001/swagger`.
@@ -60,7 +104,11 @@ To lint and format code this project use `csharpier`. To execute the linter and 
 the root of the project:
 
 ```sh
-dotnet dotnet-csharpier .
+make net_format
 ```
+
+## Deployment
+
+Sigue la guía de [Deployment](deployment.md) para desplegar el proyecto en AWS.
 
 
